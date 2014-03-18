@@ -2,6 +2,7 @@ package aufgabe_3_1_gameoflife;
 
 import java.util.stream.Stream;
 
+import aufgabe_3_1_gameoflife.Games.Description;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import de.hska.iwii.i2.gol.Games.Description;
 
 /**
  * Visualisierung einer Generation des GameOfLife in einem Fenster.
