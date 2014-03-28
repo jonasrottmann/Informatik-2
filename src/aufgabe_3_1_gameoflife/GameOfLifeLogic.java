@@ -12,6 +12,7 @@ public class GameOfLifeLogic {
 
     /**
      * Übergibt die im Menü ausgewählte Startsituation als zweidimensionales Array.
+     *
      * @param generation
      */
     public void setStartGeneration(boolean[][] generation) {
@@ -50,7 +51,7 @@ public class GameOfLifeLogic {
     }
 
     /**
-     * Berechnet die Anzahl der lebenden Nachbarzellen der Zelle an der Position (x, y).
+     * Berechnet die Anzahl der lebenden Nachbarzellen der Zelle an der Position xy.
      *
      * @param x x-Wert der zu prüfenden Zelle.
      * @param y y-Wert der zu prüfenden Zelle.
@@ -58,28 +59,52 @@ public class GameOfLifeLogic {
      */
     private int calcActiveNeighbours(int x, int y) {
         int activeNeighbours = 0;
-        // x - 1 : y
+
+        //   |   |
+        // x | O |
+        //   |   |
         if (isCellAlive(x - 1, y)) activeNeighbours++;
-        //x + 1 : y
+
+        //   |   |
+        //   | O | x
+        //   |   |
         if (isCellAlive(x + 1, y)) activeNeighbours++;
-        //x : y - 1
+
+        //   |   |
+        //   | O |
+        //   | x |
         if (isCellAlive(x, y - 1)) activeNeighbours++;
-        //x : y + 1
+
+        //   | x |
+        //   | O |
+        //   |   |
         if (isCellAlive(x, y + 1)) activeNeighbours++;
-        //x - 1 : y + 1
+
+        // x |   |
+        //   | O |
+        //   |   |
         if (isCellAlive(x - 1, y + 1)) activeNeighbours++;
-        //x + 1 : y + 1
+
+        //   |   | x
+        //   | O |
+        //   |   |
         if (isCellAlive(x + 1, y + 1)) activeNeighbours++;
-        //x - 1 : y - 1
+
+        //   |   |
+        //   | O |
+        // x |   |
         if (isCellAlive(x - 1, y - 1)) activeNeighbours++;
-        //x + 1 : y - 1
+
+        //   |   |
+        //   | O |
+        //   |   | x
         if (isCellAlive(x + 1, y - 1)) activeNeighbours++;
 
         return activeNeighbours;
     }
 
     /**
-     * Gibt den Lebenszustand der Zelle an der Position (x, y) zurück.
+     * Gibt den Lebenszustand der Zelle an der Position xy zurück.
      *
      * @param x x-Wert der zu prüfenden Zelle.
      * @param y y-Wert der zu prüfenden Zelle.
