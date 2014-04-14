@@ -5,6 +5,7 @@ package aufgabe_3_1_gameoflife;
  * als zyklisch geschlossen betrachtet.
  *
  * @author Holger Vogelsang
+ * @author Jonas Rottmann
  */
 public class GameOfLifeLogic {
 
@@ -12,42 +13,30 @@ public class GameOfLifeLogic {
 
     /**
      * Übergibt die im Menü ausgewählte Startsituation als zweidimensionales Array.
-     *
-     * @param generation
+     * @param generation Im Menu ausgewählte Startsituation.
      */
     public void setStartGeneration(boolean[][] generation) {
         population = generation;
     }
 
     /**
-     * Entwickelt die nächste Generation von Zellen.
+     * Entwickelt die nächste Generation von Zellen anhand der Regeln des Game of Life.
+     * <p>Regeln:
+     * <ul>
+     *     <li>Eine Lebende Zelle bleibt am leben, wenn sie 2 oder 3 lebende Nachbarn hat.</li>
+     *     <li>Eine lebende Zelle stirbt, wenn sie weniger als 2 oder mehr als 3 Nachbarn hat.</li>
+     *     <li>Eine tote Zelle wird wiederbelebt, wenn sie genau 3 Nachbarn hat.</li>
+     * </ul>
+     * </p>
      */
     public void nextGeneration() {
-        boolean[][] tmpPopulation = population.clone();
-        for (int i = 0; i < tmpPopulation.length; i++) {
-            for (int j = 0; j < tmpPopulation[i].length; j++) {
-                applyRules(tmpPopulation, i, j);
+        boolean[][] tmpPopulation = new boolean[population.length][population[0].length];
+        for (int i = 0; i < population.length; i++) {
+            for (int j = 0; j < population[i].length; j++) {
+                tmpPopulation[i][j] = (calcActiveNeighbours(i, j) == 3 || (isCellAlive(i, j) && calcActiveNeighbours(i, j) == 2));
             }
         }
         population = tmpPopulation;
-    }
-
-    /**
-     * Bestimmt den Zustand einer Zelle in der nächsten Generation, anhand der Regeln des Game Of Life.
-     * Eine Zelle bleibt am Leben, wenn sie 2 oder 3 lebende Nachbarn hat.
-     * Eine Zelle stirbt wenn sie mehr als 3 oder weniger als 2 lebende Nachbarn hat.
-     * Eine tote Zelle wird belebt wenn sie genau 3 lebende Nachbarn hat.
-     *
-     * @param population Aktuelle Population
-     * @param x          x-Wert der zu prüfenden Zelle.
-     * @param y          y-Wert der zu prüfenden Zelle.
-     */
-    private void applyRules(boolean[][] population, int x, int y) {
-        if (calcActiveNeighbours(x, y) < 2 | calcActiveNeighbours(x, y) > 3) {
-            population[x][y] = false;
-        } else if (calcActiveNeighbours(x, y) == 3) {
-            population[x][y] = true;
-        }
     }
 
     /**
@@ -60,45 +49,47 @@ public class GameOfLifeLogic {
     private int calcActiveNeighbours(int x, int y) {
         int activeNeighbours = 0;
 
+        //TODO Schleife
+
         //   |   |
         // x | O |
         //   |   |
-        if (isCellAlive(x - 1, y)) activeNeighbours++;
+        if (isCellAlive(x - 1, y)) { activeNeighbours++; }
 
         //   |   |
         //   | O | x
         //   |   |
-        if (isCellAlive(x + 1, y)) activeNeighbours++;
+        if (isCellAlive(x + 1, y)) { activeNeighbours++; }
 
         //   |   |
         //   | O |
         //   | x |
-        if (isCellAlive(x, y - 1)) activeNeighbours++;
+        if (isCellAlive(x, y - 1)) { activeNeighbours++; }
 
         //   | x |
         //   | O |
         //   |   |
-        if (isCellAlive(x, y + 1)) activeNeighbours++;
+        if (isCellAlive(x, y + 1)) { activeNeighbours++; }
 
         // x |   |
         //   | O |
         //   |   |
-        if (isCellAlive(x - 1, y + 1)) activeNeighbours++;
+        if (isCellAlive(x - 1, y + 1)) { activeNeighbours++; }
 
         //   |   | x
         //   | O |
         //   |   |
-        if (isCellAlive(x + 1, y + 1)) activeNeighbours++;
+        if (isCellAlive(x + 1, y + 1)) { activeNeighbours++; }
 
         //   |   |
         //   | O |
         // x |   |
-        if (isCellAlive(x - 1, y - 1)) activeNeighbours++;
+        if (isCellAlive(x - 1, y - 1)) { activeNeighbours++; }
 
         //   |   |
         //   | O |
         //   |   | x
-        if (isCellAlive(x + 1, y - 1)) activeNeighbours++;
+        if (isCellAlive(x + 1, y - 1)) { activeNeighbours++; }
 
         return activeNeighbours;
     }
