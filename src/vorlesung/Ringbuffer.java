@@ -15,6 +15,7 @@ public class Ringbuffer {
 
     public void write(int value) {
         assert ri != wi || !written;
+
         values[wi++] = value;
         if (wi == values.length) {
             wi = 0;
