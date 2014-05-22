@@ -2,19 +2,22 @@ package aufgabe_3_3_2;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by jonas on 04.05.14.
  */
 public class DrawingListenerImplementation implements DrawingListener {
-    public static final double DEFAULT_RADIUS = 50.0;
     private double xStart, yStart;
-    private myShape myShape;
-    private ArrayList<Node> selected = new ArrayList<>();
-    private ArrayList<Node> clipboard = new ArrayList<>();
+    private myShape figure;
+    private ArrayList<myNode> selected = new ArrayList<>();
+    private ArrayList<myNode> clipboard = new ArrayList<>();
     private DrawPane canvas;
     private double moveStartOffsetX, moveStartOffsetY;
 
@@ -29,14 +32,24 @@ public class DrawingListenerImplementation implements DrawingListener {
 
         switch (figureType) {
             case "ellipse":
-                myShape = new myEllipse();
+                figure = new myEllipse();
                 break;
             case "rectangle":
-                myShape = new myRectangle();
+                figure = new myRectangle();
+                break;
+            case "line":
+                figure = new myLine();
                 break;
         }
-        myShape.get().relocate(xPos, yPos);
-        canvas.getChildren().add(myShape.get());
+        //Random Color
+        Random rand = new Random();
+        double r = rand.nextDouble();
+        double g = rand.nextDouble();
+        double b = rand.nextDouble();
+        figure.setFillColor(new Color(r, g, b, 1));
+
+        figure.move(xPos, yPos);
+        canvas.getChildren().add((Shape) figure);
     }
 
     @Override
@@ -47,15 +60,17 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void workCreateFigure(double xPos, double yPos) {
-        myShape.workCreate(xStart, yStart, xPos, yPos);
+        figure.draw(xStart, yStart, xPos, yPos);
     }
 
     @Override
     public void workMoveFigure(Node node, double xPos, double yPos) {
-        while (node.getParent().getClass() == Group.class) {
+        if (node instanceof DrawPane) return; //Klicke auf Zeichenfläche nicht beachten
+
+        while (node.getParent().getClass() == myGroup.class) {
             node = node.getParent();
         }
-        node.relocate(xPos - moveStartOffsetX, yPos - moveStartOffsetY);
+        ((myNode) node).move(xPos - moveStartOffsetX, yPos - moveStartOffsetY);
     }
 
     @Override
@@ -68,18 +83,16 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void selectFigure(Node node, double xPos, double yPos, boolean shiftPressed) {
-        if (node instanceof DrawPane) {
-            clearSelected();
-            return;
-        }
+        if (node instanceof DrawPane) return; //Klicke auf Zeichenfläche nicht beachten
 
-        while (node.getParent().getClass() == Group.class) {
+        //Parent Gruppe holen
+        while (node.getParent().getClass() == myGroup.class) {
             node = node.getParent();
         }
-
+        //auswahl treffen
         if (shiftPressed) {
             node.setOpacity(0.5);
-            selected.add(node);
+            selected.add((myNode) node);
         } else {
             clearSelected();
         }
@@ -101,7 +114,7 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void deleteFigures() {
-        for (Node aSelected : selected) {
+        for (myNode aSelected : selected) {
             canvas.getChildren().remove(aSelected);
         }
         clearSelected();
@@ -109,26 +122,40 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void copyFigures() {
-        //TODO selected in clipboard klonen
+        for (myNode item : selected) {
+            clipboard.add(item);
+        }
+        clearSelected();
     }
 
     @Override
     public void pasteFigures() {
-        canvas.getChildren().addAll(clipboard);
+        for (myNode item : clipboard) {
+            try {
+                myNode newitem = item.clone();
+                canvas.getChildren().add((Node) newitem);
+            }
+            catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            finally {
+                clearSelected();
+            }
+        }
     }
 
     @Override
     public void moveSelectedFiguresToTop() {
-        for (Node aSelected : selected) {
-            aSelected.toFront();
+        for (myNode aSelected : selected) {
+            aSelected.bringToFront();
         }
         clearSelected();
     }
 
     @Override
     public void moveSelectedFiguresToBottom() {
-        for (Node aSelected : selected) {
-            aSelected.toBack();
+        for (myNode aSelected : selected) {
+            aSelected.bringToBack();
         }
         clearSelected();
     }
@@ -140,7 +167,7 @@ public class DrawingListenerImplementation implements DrawingListener {
         for(Node child : canvas.getChildren()) {
             tmp.add(child);
         }
-        for(Node s : selected) {
+        for(myNode s : selected) {
             try {
                 Collections.swap(tmp, tmp.indexOf(s), tmp.indexOf(s) - 1);
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -158,7 +185,7 @@ public class DrawingListenerImplementation implements DrawingListener {
         for(Node child : canvas.getChildren()) {
             tmp.add(child);
         }
-        for(Node s : selected) {
+        for(myNode s : selected) {
             try {
                 Collections.swap(tmp, tmp.indexOf(s), tmp.indexOf(s) + 1);
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -171,9 +198,11 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void groupFigures() {
-        Group group = new Group();
-        for (Node aSelected : selected) {
-            group.getChildren().add(aSelected);
+        myGroup group = new myGroup();
+        for (myNode aSelected : selected) {
+            if(aSelected != null) {
+                group.getChildren().add((Node) aSelected);
+            }
         }
         canvas.getChildren().add(group);
 
@@ -186,7 +215,9 @@ public class DrawingListenerImplementation implements DrawingListener {
         Group grp = (Group) selected.get(0);
         //Elemente aus Gruppe in tmp kopieren
         for (Node child : grp.getChildren()) {
-            tmp.add(child);
+            if(child != null) {
+                tmp.add(child);
+            }
         }
         //Gruppe löschen
         grp.getChildren().clear();
@@ -207,12 +238,14 @@ public class DrawingListenerImplementation implements DrawingListener {
     @Override
     public boolean isGroupSelected() {
         //Wenn nur ein Element ausgewählt ist und dieses eine Gruppe ist
-        return (selected.size() == 1 && selected.get(0).getClass() == Group.class);
+        return (selected.size() == 1 && selected.get(0).getClass() == myGroup.class);
     }
 
     public void clearSelected() {
-        for (Node aSelected : selected) {
-            aSelected.setOpacity(1);
+        for (myNode aSelected : selected) {
+            if(aSelected != null) {
+                aSelected.setAlpha(1);
+            }
         }
         selected.clear();
     }

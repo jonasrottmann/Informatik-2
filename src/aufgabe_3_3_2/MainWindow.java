@@ -230,8 +230,12 @@ public class MainWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (listener != null) {
-		            listener.pasteFigures();
-		            checkButtonsAndMenus();
+                    try {
+                        listener.pasteFigures();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    checkButtonsAndMenus();
 				}
 			}
         });

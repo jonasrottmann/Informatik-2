@@ -121,7 +121,7 @@ public interface DrawingListener extends EventListener {
     /**
      * Aufforderung zum Einfuegen der ins Clipboard kopierten Figuren.
      */
-    void pasteFigures();
+    void pasteFigures() throws CloneNotSupportedException;
 
     /**
      * Selektierte Figuren in die oberste Ebene verschieben.
