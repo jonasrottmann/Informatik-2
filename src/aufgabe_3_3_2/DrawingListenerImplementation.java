@@ -1,14 +1,13 @@
 package aufgabe_3_3_2;
 
-import javafx.scene.Group;
+import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by jonas on 04.05.14.
@@ -16,6 +15,7 @@ import java.util.Random;
 public class DrawingListenerImplementation implements DrawingListener {
     private double xStart, yStart;
     private myShape figure;
+    private boolean disableClick;
     private ArrayList<myNode> selected = new ArrayList<>();
     private ArrayList<myNode> clipboard = new ArrayList<>();
     private DrawPane canvas;
@@ -38,7 +38,7 @@ public class DrawingListenerImplementation implements DrawingListener {
                 figure = new myRectangle();
                 break;
             case "line":
-                figure = new myLine();
+                figure = new myLine(xStart, yStart, xStart, yStart);
                 break;
         }
         //Random Color
@@ -46,14 +46,17 @@ public class DrawingListenerImplementation implements DrawingListener {
         double r = rand.nextDouble();
         double g = rand.nextDouble();
         double b = rand.nextDouble();
+        // TODO nullpointerex bei leeren figuren
         figure.setFillColor(new Color(r, g, b, 1));
 
-        figure.move(xPos, yPos);
         canvas.getChildren().add((Shape) figure);
     }
 
     @Override
     public void startMoveFigure(Node node, double xPos, double yPos) {
+        while (node.getParent().getClass() == myGroup.class) {
+            node = node.getParent();
+        }
         moveStartOffsetX = xPos - node.getBoundsInParent().getMinX();
         moveStartOffsetY = yPos - node.getBoundsInParent().getMinY();
     }
@@ -75,15 +78,39 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void endCreateFigure(double xPos, double yPos) {
+        FadeTransition fade = new FadeTransition(Duration.millis(500), (Shape) figure);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.1);
+        fade.setCycleCount(2);
+        fade.setAutoReverse(true);
+        fade.play();
     }
 
     @Override
     public void endMoveFigure(Node node, double xPos, double yPos) {
+        while (node.getParent().getClass() == myGroup.class) {
+            node = node.getParent();
+        }
+        if (node instanceof DrawPane) return; //Drawpane nicht animieren
+
+        if (!disableClick) {
+            RotateTransition rotate = new RotateTransition(Duration.millis(500), node);
+            rotate.setByAngle(360);
+            rotate.setCycleCount(1);
+            rotate.setAutoReverse(false);
+            rotate.setOnFinished(actionEvent -> disableClick = false);
+            rotate.play();
+            disableClick = true;
+        }
     }
 
     @Override
     public void selectFigure(Node node, double xPos, double yPos, boolean shiftPressed) {
-        if (node instanceof DrawPane) return; //Klicke auf Zeichenfläche nicht beachten
+
+        if (node instanceof DrawPane) {
+            if (shiftPressed) return;
+            clearSelected();
+        }
 
         //Parent Gruppe holen
         while (node.getParent().getClass() == myGroup.class) {
@@ -122,6 +149,8 @@ public class DrawingListenerImplementation implements DrawingListener {
 
     @Override
     public void copyFigures() {
+        clipboard.clear();
+
         for (myNode item : selected) {
             clipboard.add(item);
         }
@@ -149,7 +178,6 @@ public class DrawingListenerImplementation implements DrawingListener {
         for (myNode aSelected : selected) {
             aSelected.bringToFront();
         }
-        clearSelected();
     }
 
     @Override
@@ -157,7 +185,6 @@ public class DrawingListenerImplementation implements DrawingListener {
         for (myNode aSelected : selected) {
             aSelected.bringToBack();
         }
-        clearSelected();
     }
 
     @Override
@@ -170,8 +197,8 @@ public class DrawingListenerImplementation implements DrawingListener {
         for(myNode s : selected) {
             try {
                 Collections.swap(tmp, tmp.indexOf(s), tmp.indexOf(s) - 1);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Fehler");
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Auswahl ist schon ganz unten.");
             }
         }
         canvas.getChildren().clear();
@@ -186,10 +213,11 @@ public class DrawingListenerImplementation implements DrawingListener {
             tmp.add(child);
         }
         for(myNode s : selected) {
+            // if indexof-1 == size return
             try {
-                Collections.swap(tmp, tmp.indexOf(s), tmp.indexOf(s) + 1);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Fehler");
+                Collections.swap(tmp, tmp.indexOf(s), (tmp.indexOf(s) + 1));
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Auswahl ist schon ganz oben.");
             }
         }
         canvas.getChildren().clear();
@@ -200,28 +228,36 @@ public class DrawingListenerImplementation implements DrawingListener {
     public void groupFigures() {
         myGroup group = new myGroup();
         for (myNode aSelected : selected) {
-            if(aSelected != null) {
+            if (aSelected != null) {
                 group.getChildren().add((Node) aSelected);
             }
         }
         canvas.getChildren().add(group);
 
+        group.setStart(group.getBoundsInParent().getMinX(), group.getBoundsInParent().getMinY());
+
         clearSelected();
     }
 
     @Override
-    public void ungroupFigures() {
+    public void ungroupFigures() throws CloneNotSupportedException {
+        myGroup grp = (myGroup) selected.get(0);
+        double newX, newY;
+        double grpMinX = grp.getBoundsInParent().getMinX();
+        double grpMinY = grp.getBoundsInParent().getMinY();
+
         ArrayList<Node> tmp = new ArrayList<>();
-        Group grp = (Group) selected.get(0);
-        //Elemente aus Gruppe in tmp kopieren
-        for (Node child : grp.getChildren()) {
-            if(child != null) {
-                tmp.add(child);
-            }
+        for (Node item : grp.getChildren()) {
+            tmp.add(item);
         }
-        //Gruppe löschen
+        clearSelected();
         grp.getChildren().clear();
-        //Elemente aus tmp wieder in canvas einfügen
+
+        for (Node item : tmp) {
+            newX = (grpMinX - grp.getxStart()) + item.getBoundsInParent().getMinX();
+            newY = (grpMinY - grp.getyStart()) + item.getBoundsInParent().getMinY();
+            item.relocate(newX, newY);
+        }
         canvas.getChildren().addAll(tmp);
     }
 

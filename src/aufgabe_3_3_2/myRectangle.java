@@ -25,6 +25,7 @@ public class myRectangle extends Rectangle implements myShape {
             //nach rechts unten ziehen
             this.setHeight(yPos - yStart);
             this.setWidth(xPos - xStart);
+            this.relocate(xStart, yStart);
         }
         else if (yStart - yPos < 0 && xStart - xPos > 0) {
             //nach links unten ziehen

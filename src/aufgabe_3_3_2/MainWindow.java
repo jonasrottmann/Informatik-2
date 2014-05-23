@@ -315,8 +315,12 @@ public class MainWindow extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (listener != null) {
-		            listener.ungroupFigures();
-		            checkButtonsAndMenus();
+                    try {
+                        listener.ungroupFigures();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    checkButtonsAndMenus();
 				}
 			}
         });

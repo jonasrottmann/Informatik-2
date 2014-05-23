@@ -151,7 +151,7 @@ public interface DrawingListener extends EventListener {
     /**
      * Alle selektierten Gruppen aufloesen.
      */
-    void ungroupFigures();
+    void ungroupFigures() throws CloneNotSupportedException;
     
     /**
      * Anzahl selektierter Figuren ermitteln.
