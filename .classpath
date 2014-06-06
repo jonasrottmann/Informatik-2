@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/informatik_2/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/junit-4.11"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/hamcrest-core-1.31"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

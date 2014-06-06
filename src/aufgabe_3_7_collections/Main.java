@@ -16,7 +16,7 @@ import static aufgabe_3_7_collections.Test.*;
 public class Main {
 
     public static final int REP = 50;
-    public static final int AMOUNT = 999999;
+    public static final int AMOUNT = 9999999;
 
     public static void main(String[] args) {
         Writer.clearFile();
@@ -98,16 +98,20 @@ public class Main {
 
 
         System.out.println("\n\n ########################################################## \n\n");
-        arrayList.clear();
-
-        System.out.println("Füllen mit ADD");
-            fillArrayListADD(arrayList, REP, AMOUNT);
 
         System.out.println("Füllen mit GENERATE");
             fillArrayListGENERATE(arrayList, REP, AMOUNT);
 
+        System.out.println("Füllen mit ADD");
+            fillArrayListADD(arrayList, REP, AMOUNT);
 
         System.out.println("Addieren mit Iterator");
-            addIterator(arrayList, REP);
+            sumIterator(arrayList, REP);
+
+        System.out.println("Addieren mit Stream");
+            sumStream(arrayList, REP);
+
+        System.out.println("Addieren mit ParallelStream");
+            sumStreamParallel(arrayList, REP);
     }
 }

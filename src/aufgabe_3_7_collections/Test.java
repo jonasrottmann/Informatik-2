@@ -172,27 +172,26 @@ public class Test {
      * @param repetitions
      * @param length
      */
-    public static void fillArrayListADD(ArrayList<Integer> liste, int repetitions, int length) {
+    public static void fillArrayListGENERATE(List<Integer> liste, int repetitions, int length) {
         time.clear();
 
         for (int i = 0; i < repetitions; i++) {
             liste.clear();
-
             long start = System.currentTimeMillis();
 
-            for (int j = 0; j <= length; j++) {
-                liste.add(rand.nextInt(length));
-            }
+            /* Start Test */
+            Stream<Integer> str = Stream.generate(()->rand.nextInt(length)).limit(length);
+            liste = str.collect(Collectors.toList());
+            /* Ende Test */
 
             long end = System.currentTimeMillis();
             long duration = (end - start);
             time.add(duration);
-
-            Writer.write("fillArrayListADD", liste.getClass().toString(), duration);
+            Writer.write("fillArrayListGENERATE", liste.getClass().toString(), duration);
         }
         //Ausgabe
         System.out.println("\tData structure: " + liste.getClass());
-        System.out.println("\tTest: fillArrayListADD");
+        System.out.println("\tTest: fillArrayListGENERATE");
         System.out.println("\tMin.: " + getMinimum() + " | " + "Max.: " + getMaximum() + " | " + "Avg.: " + getAverage());
         System.out.println("\t------------------------------");
     }
@@ -203,56 +202,99 @@ public class Test {
      * @param repetitions
      * @param length
      */
-    public static void fillArrayListGENERATE(List<Integer> liste, int repetitions, int length) {
+    public static void fillArrayListADD(ArrayList<Integer> liste, int repetitions, int length) {
         time.clear();
+        liste.clear();
 
         for (int i = 0; i < repetitions; i++) {
             liste.clear();
-
             long start = System.currentTimeMillis();
 
-            Stream<Integer> str = Stream.generate(()->rand.nextInt(length)).limit(length);
-
-            //TODO stream in liste
-            liste = str.collect(Collectors.toList());
+            for (int j = 0; j <= length; j++) {
+                liste.add(rand.nextInt(length));
+            }
 
             long end = System.currentTimeMillis();
-
             long duration = (end - start);
             time.add(duration);
-
-            Writer.write("fillArrayListGENERATE", liste.getClass().toString(), duration);
+            Writer.write("fillArrayListADD", liste.getClass().toString(), duration);
         }
         //Ausgabe
         System.out.println("\tData structure: " + liste.getClass());
-        System.out.println("\tTest: fillArrayListGENERATE");
+        System.out.println("\tTest: fillArrayListADD");
         System.out.println("\tMin.: " + getMinimum() + " | " + "Max.: " + getMaximum() + " | " + "Avg.: " + getAverage());
         System.out.println("\t------------------------------");
     }
 
 
-    public static void addIterator(ArrayList<Integer> liste, int repetitions) {
+    public static void sumStream(ArrayList<Integer> liste, int repetitions) {
+        time.clear();
+
+        for (int i = 0; i < repetitions; i++) {
+            long start = System.currentTimeMillis();
+
+            /* Start Test */
+            int sum = liste.stream().filter(v -> v % 2 == 0).mapToInt(Integer::valueOf).sum();
+            /* Ende Test */
+
+            long end = System.currentTimeMillis();
+            long duration = (end - start);
+            time.add(duration);
+            Writer.write("sumStream", liste.getClass().toString(), duration);
+        }
+        //Ausgabe
+        System.out.println("\tData structure: " + liste.getClass());
+        System.out.println("\tTest: sumStream");
+        System.out.println("\tMin.: " + getMinimum() + " | " + "Max.: " + getMaximum() + " | " + "Avg.: " + getAverage());
+        System.out.println("\t------------------------------");
+    }
+
+    public static void sumStreamParallel(ArrayList<Integer> liste, int repetitions) {
+        time.clear();
+
+        for (int i = 0; i < repetitions; i++) {
+            long start = System.currentTimeMillis();
+
+            /* Start Test */
+            int sum = liste.parallelStream().filter(v -> v % 2 == 0).mapToInt(Integer::valueOf).sum();
+            /* Ende Test */
+
+            long end = System.currentTimeMillis();
+            long duration = (end - start);
+            time.add(duration);
+            Writer.write("sumStreamParallel", liste.getClass().toString(), duration);
+        }
+        //Ausgabe
+        System.out.println("\tData structure: " + liste.getClass());
+        System.out.println("\tTest: sumStreamParallel");
+        System.out.println("\tMin.: " + getMinimum() + " | " + "Max.: " + getMaximum() + " | " + "Avg.: " + getAverage());
+        System.out.println("\t------------------------------");
+    }
+
+    public static void sumIterator(ArrayList<Integer> liste, int repetitions) {
         time.clear();
 
         for (int i = 0; i < repetitions; i++) {
             int sum = 0;
-
             long start = System.currentTimeMillis();
 
-            Iterator<Integer> iter = liste.iterator();
-            while(iter.hasNext()) {
-                //TODO gerade Zahlen addieren
+            /* Start Test */
+            for (Iterator<Integer> iterator = liste.iterator(); iterator.hasNext(); ) {
+                Integer item = iterator.next();
+                if (item % 2 == 0) {
+                    sum += item;
+                }
             }
+            /* Ende Test */
 
             long end = System.currentTimeMillis();
-
             long duration = (end - start);
             time.add(duration);
-            Writer.write("fillArrayListGENERATE", liste.getClass().toString(), duration);
+            Writer.write("sumIterator", liste.getClass().toString(), duration);
         }
         //Ausgabe
         System.out.println("\tData structure: " + liste.getClass());
-        System.out.println("\tTest: addIterator");
+        System.out.println("\tTest: sumIterator");
         System.out.println("\tMin.: " + getMinimum() + " | " + "Max.: " + getMaximum() + " | " + "Avg.: " + getAverage());
         System.out.println("\t------------------------------");
     }
