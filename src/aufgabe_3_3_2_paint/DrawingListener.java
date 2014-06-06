@@ -1,7 +1,7 @@
 /*
  * @author Holger Vogelsang
  */
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 
 import java.util.EventListener;
 

@@ -1,4 +1,4 @@
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 
 import javafx.scene.paint.Color;
 
@@ -32,5 +32,4 @@ public interface myShape extends myNode {
      * @param color
      */
     void setFillColor(Color color);
-
 }

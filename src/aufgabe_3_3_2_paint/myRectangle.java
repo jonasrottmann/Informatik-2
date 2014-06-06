@@ -1,4 +1,4 @@
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

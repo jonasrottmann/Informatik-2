@@ -1,7 +1,7 @@
 /*
  * Created on 25.02.2014
  */
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 
 import java.util.ResourceBundle;
 
@@ -114,7 +114,7 @@ public class MainWindow extends Application {
      */
     private String getResource(String key) {
         if (bundle == null) {
-            bundle = ResourceBundle.getBundle("aufgabe_3_3_2/lang");
+            bundle = ResourceBundle.getBundle("aufgabe_3_3_2_paint/lang");
         }
         String text = bundle.getString(key);
         int index = text.indexOf('&');
@@ -386,20 +386,20 @@ public class MainWindow extends Application {
         bar.getItems().add(new Separator());
 
         // Figur auswaehlen
-        selectButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource("Select.Image"))));
+        selectButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource("Select.Image"))));
         selectButton.setTooltip(new Tooltip(getResource("Select.Tooltip")));
         
         // Kreis erstellen
-        circleButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource("CreateCircle.Image"))));
+        circleButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource("CreateCircle.Image"))));
         circleButton.setTooltip(new Tooltip(getResource("CreateCircle.Tooltip")));
         circleButton.setSelected(true);
         
         // Rechteck erstellen
-        rectButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource("CreateRectangle.Image"))));
+        rectButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource("CreateRectangle.Image"))));
         rectButton.setTooltip(new Tooltip(getResource("CreateRectangle.Tooltip")));
 
         // Linie erstellen
-        lineButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource("CreateLine.Image"))));
+        lineButton = new ToggleButton("", new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource("CreateLine.Image"))));
         lineButton.setTooltip(new Tooltip(getResource("CreateLine.Tooltip")));
         
         typeGroup = new ToggleGroup();
@@ -431,7 +431,7 @@ public class MainWindow extends Application {
         MenuItem item = new MenuItem(label);
         item.setMnemonicParsing(true);
         if (iconName != null) {
-            item.setGraphic(new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource(iconName))));
+            item.setGraphic(new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource(iconName))));
         }
         if (keyStroke != null) {
         	item.setAccelerator(KeyCombination.keyCombination(getResource(keyStroke)));
@@ -450,7 +450,7 @@ public class MainWindow extends Application {
     private Button createButton(ToolBar bar, String iconName, String toolTipText) {
         Button button = new Button();
         if (iconName != null) {
-            button.setGraphic(new ImageView(new Image("aufgabe_3_3_2/Images/" + getResource(iconName))));
+            button.setGraphic(new ImageView(new Image("aufgabe_3_3_2_paint/Images/" + getResource(iconName))));
         }
         button.setTooltip(new Tooltip(getResource(toolTipText)));
         bar.getItems().add(button);

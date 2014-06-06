@@ -1,11 +1,12 @@
 package aufgabe_3_2_1_doppeltverketteteliste;
-
+/**
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-
+*/
 /** 
 * LinkedList Tester. 
 * 
@@ -14,13 +15,15 @@ import static org.junit.Assert.assertEquals;
 * @version 1.0 
 */ 
 public class LinkedListTest {
-    @Rule public ExpectedException thrown = ExpectedException.none();
+    /*
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-    /**
+    *//**
      *
      * Method: addFirst(String value)
      *
-     */
+     *//*
     @Test
     public void testAddFirst1() throws Exception {
         LinkedList myList = new LinkedList();
@@ -40,12 +43,11 @@ public class LinkedListTest {
     }
 
 
-
-    /**
+    *//**
      *
      * Method: addLast(String value)
      *
-     */
+     *//*
     @Test
     public void testAddLast1() throws Exception {
         LinkedList myList = new LinkedList();
@@ -64,11 +66,11 @@ public class LinkedListTest {
         assertEquals(myList.get(1), "Hallo, ich muss das letzte Element sein!");
     }
 
-    /**
+    *//**
      *
      * Method: add(int index, String value)
      *
-     */
+     *//*
     @Test
     public void testAdd1() throws Exception {
         LinkedList myList = new LinkedList();
@@ -80,36 +82,36 @@ public class LinkedListTest {
     @Test
     public void testAdd2() throws Exception {
         LinkedList myList = new LinkedList();
-        myList.addFirst("Test");
-        myList.addFirst("Test");
+        myList.addFirst("Test3_1");
+        myList.addFirst("Test3_1");
         myList.add(0, "Hallo!");
 
         assertEquals(myList.get(0), "Hallo!");
-        assertEquals(myList.get(1), "Test");
-        assertEquals(myList.get(2), "Test");
+        assertEquals(myList.get(1), "Test3_1");
+        assertEquals(myList.get(2), "Test3_1");
     }
 
     @Test
     public void testAdd3() throws Exception {
         LinkedList myList = new LinkedList();
-        myList.addFirst("Test");
-        myList.addFirst("Test");
+        myList.addFirst("Test3_1");
+        myList.addFirst("Test3_1");
         myList.add(1, "Hallo!");
 
-        assertEquals(myList.get(0), "Test");
+        assertEquals(myList.get(0), "Test3_1");
         assertEquals(myList.get(1), "Hallo!");
-        assertEquals(myList.get(2), "Test");
+        assertEquals(myList.get(2), "Test3_1");
     }
 
     @Test
     public void testAdd4() throws Exception {
         LinkedList myList = new LinkedList();
-        myList.addFirst("Test");
-        myList.addFirst("Test");
+        myList.addFirst("Test3_1");
+        myList.addFirst("Test3_1");
         myList.add(2, "Hallo!");
 
-        assertEquals(myList.get(0), "Test");
-        assertEquals(myList.get(1), "Test");
+        assertEquals(myList.get(0), "Test3_1");
+        assertEquals(myList.get(1), "Test3_1");
         assertEquals(myList.get(2), "Hallo!");
     }
 
@@ -121,11 +123,11 @@ public class LinkedListTest {
         myList.add(10, "Hallo!");
     }
 
-    /**
+    *//**
      *
      * Method: removeFirst()
      *
-     */
+     *//*
     @Test
     public void testRemoveFirst1() throws Exception {
         thrown.expect(AssertionError.class);
@@ -154,11 +156,11 @@ public class LinkedListTest {
         assertEquals(myList.getSize(), 0);
     }
 
-    /**
+    *//**
     *
     * Method: removeLast()
     *
-    */
+    *//*
     @Test
     public void testRemoveLast1() throws Exception {
         thrown.expect(AssertionError.class);
@@ -177,11 +179,11 @@ public class LinkedListTest {
         assertEquals(myList.get(0), "Ich nicht.");
     }
 
-    /**
+    *//**
     *
     * Method: remove(int index)
     *
-    */
+    *//*
     @Test
     public void testRemove1() throws Exception {
         thrown.expect(AssertionError.class);
@@ -217,11 +219,11 @@ public class LinkedListTest {
         assertEquals(myList.get(0), "Ich auch.");
     }
 
-    /**
+    *//**
     *
     * Method: getSize()
     *
-    */
+    *//*
     @Test
     public void testGetSize1() throws Exception {
         LinkedList myList = new LinkedList();
@@ -234,5 +236,6 @@ public class LinkedListTest {
         myList.addFirst("Hallo!");
 
         assertEquals(myList.getSize(), 1);
-    }
+    }*/
+
 }

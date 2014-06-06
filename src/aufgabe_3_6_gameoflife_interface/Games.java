@@ -1,4 +1,4 @@
-package aufgabe_3_1_gameoflife;
+package aufgabe_3_6_gameoflife_interface;
 
 /**
  * Diese Klasse kapselt einige vordefinierte Startgenerationen

@@ -1,4 +1,4 @@
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
@@ -20,6 +20,7 @@ public class DrawingListenerImplementation implements DrawingListener {
     private ArrayList<myNode> clipboard = new ArrayList<>();
     private DrawPane canvas;
     private double moveStartOffsetX, moveStartOffsetY;
+    private double merkeX, merkeY;
 
     public DrawingListenerImplementation(DrawPane canvas) {
         this.canvas = canvas;
@@ -59,6 +60,9 @@ public class DrawingListenerImplementation implements DrawingListener {
         }
         moveStartOffsetX = xPos - node.getBoundsInParent().getMinX();
         moveStartOffsetY = yPos - node.getBoundsInParent().getMinY();
+
+        merkeX = node.getBoundsInParent().getMinX();
+        merkeY = node.getBoundsInParent().getMinY();
     }
 
     @Override
@@ -93,13 +97,17 @@ public class DrawingListenerImplementation implements DrawingListener {
         }
         if (node instanceof DrawPane) return; //Drawpane nicht animieren
 
-        if (!disableClick) {
+        if (!disableClick &&
+                node.getBoundsInParent().getMinX() != merkeX &&
+                node.getBoundsInParent().getMinY() != merkeY) {
             RotateTransition rotate = new RotateTransition(Duration.millis(500), node);
             rotate.setByAngle(360);
             rotate.setCycleCount(1);
             rotate.setAutoReverse(false);
-            rotate.setOnFinished(actionEvent -> disableClick = false);
+            rotate.setOnFinished(event -> disableClick = false);
+
             rotate.play();
+
             disableClick = true;
         }
     }
@@ -150,6 +158,7 @@ public class DrawingListenerImplementation implements DrawingListener {
     @Override
     public void copyFigures() {
         clipboard.clear();
+
 
         for (myNode item : selected) {
             clipboard.add(item);

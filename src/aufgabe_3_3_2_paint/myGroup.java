@@ -1,6 +1,5 @@
-package aufgabe_3_3_2;
+package aufgabe_3_3_2_paint;
 
-import com.sun.javafx.tools.packager.Log;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -22,12 +21,13 @@ public class myGroup extends Group implements myNode {
     private double yStart;
 
     @Override
-    public myNode clone() throws CloneNotSupportedException {
+    public myGroup clone() throws CloneNotSupportedException {
+
         myGroup newgroup = new myGroup();
 
         for (Node item : this.getChildren()) {
             if (item instanceof myGroup) {
-                myGroup newgroup2 = (myGroup) ((myGroup) item).clone();
+                myGroup newgroup2 = ((myGroup) item).clone();
                 newgroup.getChildren().add(newgroup2);
             } else {
                 try {
@@ -38,6 +38,7 @@ public class myGroup extends Group implements myNode {
                 }
             }
         }
+        newgroup.relocate(this.getBoundsInParent().getMinX(), this.getBoundsInParent().getMinY());
         return newgroup;
     }
 
